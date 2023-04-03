@@ -1,0 +1,18 @@
+body{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    background-color:aqua;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.page-header__item:first-child{
+    width: 250px;
+    max-width: 30%;
+    aspect-ratio: 2/1;
+}
