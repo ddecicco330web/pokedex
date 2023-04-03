@@ -25,7 +25,7 @@ let pokemonList= [
 for(let i = 0; i < pokemonList.length; i++){
     let name = pokemonList[i].name;
     let height = pokemonList[i].height;
-    
+
     document.write(name + ' (height: ' + height + ') ');
 
     if(pokemonList[i].height > 6){
