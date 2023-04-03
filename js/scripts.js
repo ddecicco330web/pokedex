@@ -23,9 +23,14 @@ let pokemonList= [
 
 // Print pokemon info
 for(let i = 0; i < pokemonList.length; i++){
-    document.write(pokemonList[i].name + ' (height: ' + pokemonList[i].height + ') ');
+    let name = pokemonList[i].name;
+    let height = pokemonList[i].height;
+    
+    document.write(name + ' (height: ' + height + ') ');
+
     if(pokemonList[i].height > 6){
         document.write("- Wow, that's big!");
     }
+
     document.write('<br>');
 }
