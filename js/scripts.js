@@ -59,8 +59,8 @@ function printFiltered(name) {
         })
     }
     else{
+        clearList();
         pokemonRepository.getFiltered(name).forEach(function(item){
-            clearList();
             printList(item);
         })
     }
