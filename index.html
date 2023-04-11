@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simple JS App</title>
+    <title>Pokedex App</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,8 +16,8 @@
     </header>
 
     <div class = "page-content">
-      <input type = "text" id="search">
-      <button type = "button" onclick = "printFiltered(search.value)">Search</button><br>
+      <input type = "text" id="search" onkeyup="printFiltered(search.value)">
+      <ul id="pokemonList"></ul>
       <script src="js/scripts.js"></script>
     </div>
   </body>
