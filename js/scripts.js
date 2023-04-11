@@ -12,7 +12,9 @@ let pokemonRepository = (function (){
         }
     };
     function getAll() {return pokemonList;};
-    function getFiltered(name) {return pokemonList.filter(pokemon => pokemon.name === name)};
+    function getFiltered(name) {
+        return pokemonList.filter(pokemon => pokemon.name.toLowerCase().includes(name.toLowerCase()))
+    };
 
     return{
         add : add,
@@ -21,31 +23,53 @@ let pokemonRepository = (function (){
     };
 })();
 
+// Add pokemon
 pokemonRepository.add({name : 'Bulbasaur', height : 7, type : ['grass','poison']});
 pokemonRepository.add({name : 'Charmander', height : 6, type : ['fire']});
 pokemonRepository.add({name : 'Squirtle', height : 5, type : ['water']});
 
-pokemonRepository.getAll().forEach(function(item){
-    document.write(item.name + ' (height: ' + item.height + ') ');
+// Print pokemon names and stats
+const printList = (item) => {
+    const node = document.createElement('li');
 
-    if(item.height > 6){
-        document.write("- Wow, that's big!");
+    const text = () => {
+        if(item.height > 6){
+            return item.name + ' (height: ' + item.height + ') - Wow, that is big!';
+        }
+
+        return item.name + ' (height: ' + item.height + ')'
     }
 
-    document.write('<br>');
+    const textNode = document.createTextNode(text());
+
+    node.appendChild(textNode);
+    document.getElementById('pokemonList').appendChild(node);
+}
+
+// Loop through all of the pokemon and print
+pokemonRepository.getAll().forEach(function(item){
+    printList(item);
 })
 
 function printFiltered(name) {
-    pokemonRepository.getFiltered(name).forEach(function(item){
-   
-        document.write(item.name + ' (height: ' + item.height + ') ');
-
-    if(item.height > 6){
-        document.write("- Wow, that's big!");
+    if(name===""){
+        clearList();
+        pokemonRepository.getAll().forEach(function(item){
+            printList(item);
+        })
     }
+    else{
+        pokemonRepository.getFiltered(name).forEach(function(item){
+            clearList();
+            printList(item);
+        })
+    }
+}
 
-    document.write('<br>');
-})}
+function clearList()
+{
+    document.getElementById('pokemonList').innerHTML = "";
+}
 
 
 
