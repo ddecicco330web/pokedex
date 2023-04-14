@@ -2,16 +2,19 @@
 
 let pokemonRepository = (function (){
     let pokemonList = [];
-
+    let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
     // Add a pokemon to pokemonList
     function add(pokemon) {
         if(typeof(pokemon) === 'object'){
             let keys = Object.keys(pokemon);
-            if(keys[0] === 'name' && keys[1] === 'height' && keys[2] === 'type'){  
+            if(keys.includes('name') && keys.includes('detailsURL')){
                 pokemonList.push(pokemon);
-            }    
+                return;
+            }
         }
+
+        console.log('Failed to add pokoemon ' + pokemon + ' to the list.');
     };
 
     // Return pokemonList
@@ -21,17 +24,6 @@ let pokemonRepository = (function (){
     function getFiltered(name) {
         return pokemonList.filter(pokemon => pokemon.name.toLowerCase().includes(name.toLowerCase()))
     };
-
-    // Print pokemon details in console
-    function showDetails(pokemon){
-        console.log(pokemon);
-    }
-
-    function addButtonClickEvent(button, pokemon){
-        button.addEventListener('click', function (event){
-            showDetails(pokemon);
-        })
-    }
 
     // Add list element to HTML page
     function addListItem(pokemon){
@@ -70,51 +62,101 @@ let pokemonRepository = (function (){
         }
     }
 
+    // Load pokemon list from JSON
+    function loadList(){
+        showLoadingMessage();
+        return fetch(apiUrl).then(function (response){
+            return response.json();
+        }).then(function (json){
+            json.results.forEach(function (item){
+                let pokemon = {
+                    name : item.name,
+                    detailsURL : item.url
+                };
+                add(pokemon);
+            });
+            hideLoadingMessage();
+        }).catch(function (e){
+            console.error(e);
+           hideLoadingMessage();
+        });
+    }
+
+    function loadDetails(item){
+        showLoadingMessage();
+        let url = item.detailsURL;
+        return fetch(url).then(function(response){
+            return response.json();
+        }).then(function(details){
+            item.imageURL = details.sprites.front_default;
+            item.height = details.height;
+            item.types = details.types;
+            hideLoadingMessage();
+        }).catch(function(e){
+            console.error(e);
+            hideLoadingMessage();
+        });
+    }
+
+    // Print pokemon details in console
+    function showDetails(pokemon){
+        loadDetails(pokemon).then(function(response){
+            console.log(pokemon);
+        })
+        
+    }
+
+    function addButtonClickEvent(button, pokemon){
+        button.addEventListener('click', function (event){
+            showDetails(pokemon);
+        })
+    }
+
+    function showLoadingMessage(){
+        let loadingMsg = document.createElement('p');
+        let pokemonList = document.querySelector('.pokemonList');
+        loadingMsg.classList.add('loading-msg');
+        loadingMsg.innerText = 'Loading...';
+        document.querySelector('.page-content').insertBefore(loadingMsg, pokemonList);
+    }
+
+    function hideLoadingMessage(){
+        let loadingMsg = document.querySelector('.loading-msg');
+        console.log(loadingMsg);
+        document.querySelector('.page-content').removeChild(loadingMsg);
+    }
+
     return{
         add : add,
         getAll : getAll,
         getFiltered : getFiltered,
         addListItem : addListItem,
-        printFiltered : printFiltered
+        printFiltered : printFiltered,
+        loadList : loadList,
+        loadDetails : loadDetails,
+        showDetails : showDetails
     };
 })();
 
-// Add pokemon
-pokemonRepository.add({name : 'Bulbasaur', height : 7, type : ['grass','poison']});
-pokemonRepository.add({name : 'Charmander', height : 6, type : ['fire']});
-pokemonRepository.add({name : 'Squirtle', height : 5, type : ['water']});
+// Load pokemon
+pokemonRepository.loadList().then(function (response){
+    pokemonRepository.getAll().forEach(function (pokemon){
+        pokemonRepository.addListItem(pokemon);
+    });
+});
 
-
-// Loop through all of the pokemon and print
+/*// Loop through all of the pokemon and print
 pokemonRepository.getAll().forEach(function(item){
     pokemonRepository.addListItem(item);
-})
+})*/
 
 
 // Filter if characters are typed in search bar
 window.addEventListener('keyup', function(event){
-    if(event.target.getAttribute('id') === 'search')
-    {
+    if(event.target.getAttribute('id') === 'search'){
         pokemonRepository.printFiltered(event.target.value);
     }
 })
 
 
 
-/*{
-        name: 'Bulbasaur',
-        height: 7,
-        type: ['grass','poison']
-   },
-
-   {
-        name: 'Charmander',
-        height: 6,
-        type: ['fire']
-   },
-
-   {
-        name: 'Squirtle',
-        height: 5,
-        type: ['water']
-   }*/
