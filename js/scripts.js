@@ -1,6 +1,6 @@
 // Modal 
 let modalRepo = (function(){
-    let modalContainer = document.querySelector('#modal-container');
+    let modalContainer = document.querySelector('#infoModal');
     let prevX = null;
     let prevY = null;
 
@@ -8,20 +8,21 @@ let modalRepo = (function(){
         modalContainer.classList.remove('is-visible');
     }
 
+    // Initiate swipe
     function handleStart(e){
         prevX = e.pageX;
         prevY = e.pageY;
-        console.log('start');
     }
 
+    // Reset swipe vars
     function handleEnd(){
         prevX = null;
         prevY = null;
-        console.log('end');
     }
 
     // Handle swipe functionality
-    function handleMove(e, pokemon){
+    function handleMove(e){
+
         if(!prevX || !prevY){
             return;
         }
@@ -35,7 +36,7 @@ let modalRepo = (function(){
         // Itterate to the next/previous pokemon
         if(Math.abs(xDiff) > Math.abs(yDiff)){
             let pokemonList = pokemonRepository.getAll();
-            let position = pokemonList.indexOf(pokemon);
+            let position = pokemonList.indexOf(pokemonRepository.getCurrent());
 
             if(xDiff > 0){
                 // swipe rigght
@@ -53,10 +54,46 @@ let modalRepo = (function(){
 
         prevX = null;
         prevY = null;
+
     }
 
     // Create element and assign values 
     function buildElement(type, innerText, elementClass = null, event = null, eventFunction = null){
+        // Validate arguments
+        if(typeof(type) !== 'string'){
+            console.log("buildElement function error: argument 'type' needs to be a string.");
+            return;
+        }
+
+        if(innerText !== null){
+            if(typeof(innerText) !== 'string'){
+                console.log("buildElement function error: argument 'innerText' needs to be a string.");
+                return;
+            }
+        }
+    
+        if(elementClass !== null){
+            if(typeof(elementClass) !== 'string'){
+                console.log("buildElement function error: argument 'elementClass' needs to be a string.");
+                return;
+            }
+        }
+
+        if(event !== null){
+            if(typeof(event) !== 'string'){
+                console.log("buildElement function error: argument 'event' needs to be a string.");
+                return;
+            }
+        }
+
+        if(eventFunction !== null){
+            if(typeof(eventFunction) !== 'function'){
+                console.log("buildElement function error: argument 'eventFunction' needs to be a function.");
+                return;
+            }
+        }
+
+        // Build modal
         let modalElement = document.createElement(type);
         modalElement.innerText = innerText;
         if(elementClass){
@@ -72,19 +109,22 @@ let modalRepo = (function(){
 
     // Build and show modal
     function showModal(pokemon){
-        // remove existing modal
-        modalContainer.innerHTML = "";
 
-        // create modal
-        let modal = buildElement('div', null, 'modal');
+        // Get Modal Elements
+        let modal = document.querySelector('.modal-dialog');
+        let modalTitle = document.querySelector('.modal-title');
+        let modalBody = document.querySelector('.modal-body');
 
-        // create close button
-        let closeButton = buildElement('button', 'X', 'modal-close', 'click', hideModal);
+        modalTitle.innerHTML="";
+        modalBody.innerHTML="";
 
+        // Make Header
         // title
-        let titleElement = buildElement('h1', pokemon.name);
+        let titleElement = buildElement('h2', pokemon.name);
+        modalTitle.appendChild(titleElement);
+        
 
-        // content
+        // Make Body
         let text = 'Height ' + pokemon.height + '\nType:';
             for(let i = 0; i < pokemon.types.length; i++){
                 text += ' ' + pokemon.types[i].type.name;
@@ -95,6 +135,7 @@ let modalRepo = (function(){
             }
             
         let contentElement = buildElement('p', text);
+        modalBody.appendChild(contentElement);
 
         // image container (prevButton, image, nextButton)
         let imageContainer = buildElement('div', null, 'modal-image-container');
@@ -122,33 +163,16 @@ let modalRepo = (function(){
             imageContainer.appendChild(nextButtonElement);
         }
 
-        
-        // append elements
-        modal.appendChild(closeButton);
-        modal.appendChild(titleElement);
-        modal.appendChild(contentElement);
-        modal.appendChild(imageContainer);
+        modalBody.appendChild(imageContainer);
 
         modal.addEventListener('pointerdown', handleStart);
         modal.addEventListener('pointerup', handleEnd);
         modal.addEventListener('pointercancel', handleEnd);
-        modal.addEventListener('pointermove', (e) => handleMove(e, pokemon));
+        modal.addEventListener('pointermove', (e) => handleMove(e));
 
-        modalContainer.appendChild(modal);
 
-        modalContainer.classList.add('is-visible');
-        modalContainer.addEventListener('click', (e) => {
-            if(e.target === modalContainer){
-                hideModal();
-            }
-        });
+
     }
-
-    window.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape' && modalContainer.classList.contains('is-visible')){
-            hideModal();
-        }
-    });
 
     return {
         showModal : showModal
@@ -159,6 +183,7 @@ let modalRepo = (function(){
 let pokemonRepository = (function (){
     // Variables
     let pokemonList = [];
+    let currentPokemon = null;
     let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
     // Add a pokemon to pokemonList
@@ -177,6 +202,9 @@ let pokemonRepository = (function (){
     // Return pokemonList
     function getAll() {return pokemonList;};
 
+    // Return current pokemon that is showing info
+    function getCurrent(){return currentPokemon;};
+
     // Return pokemon names that inlude string parameter
     function getFiltered(name) {
         return pokemonList.filter(pokemon => pokemon.name.includes(name.toUpperCase()))
@@ -185,10 +213,17 @@ let pokemonRepository = (function (){
     // Add list element to HTML page
     function addListItem(pokemon){
         const node = document.createElement('li');
+
+        node.classList.add('list-group-item');
+
         let button = document.createElement('button');
 
         button.innerText = pokemon.name;
+        button.classList.add('btn');
+        button.classList.add('btn-primary');
         button.classList.add('custom-button');
+        button.setAttribute('data-toggle', 'modal');
+        button.setAttribute('data-target', '#infoModal');
         node.appendChild(button);
         addButtonClickEvent(button, pokemon);
     
@@ -260,8 +295,7 @@ let pokemonRepository = (function (){
     // Print pokemon details in console
     function showDetails(pokemon){
         loadDetails(pokemon).then(function(response){
-            console.log(pokemon);
-    
+            currentPokemon = pokemon;
             modalRepo.showModal(pokemon);
         })
     }
@@ -294,7 +328,8 @@ let pokemonRepository = (function (){
         printFiltered : printFiltered,
         loadList : loadList,
         loadDetails : loadDetails,
-        showDetails : showDetails
+        showDetails : showDetails,
+        getCurrent : getCurrent
     };
 })();
 
@@ -305,18 +340,12 @@ pokemonRepository.loadList().then(function (response){
     });
 });
 
-/*// Loop through all of the pokemon and print
-pokemonRepository.getAll().forEach(function(item){
-    pokemonRepository.addListItem(item);
-})*/
 
 
-// Filter if characters are typed in search bar
-window.addEventListener('keyup', function(event){
-    if(event.target.getAttribute('id') === 'search'){
-        pokemonRepository.printFiltered(event.target.value);
-    }
-})
-
+let searchBar = document.querySelector('#search');
+console.log(searchBar);
+searchBar.addEventListener('input', function(e){
+    pokemonRepository.printFiltered(e.target.value);
+});
 
 
