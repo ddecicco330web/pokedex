@@ -1,21 +1,10 @@
 body{
     margin: auto;
-    text-align: center;
     background-color:aqua;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
 }
 
-* {
-    box-sizing: border-box;
-}
-
-/*Adjust logo size*/
-.page-header__item:first-child{
-    width: 250px;
-    max-width: 30%;
-    aspect-ratio: 2/1;
-}
 
 ul{
     list-style-type: none;
@@ -24,99 +13,34 @@ ul{
     max-width: 500px;
 }
 
-li{
-    border-style: solid;
-    border-bottom: none;
-}
-
-li:last-child{
-    border-bottom :solid;
-}
 
 .page-content{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 200px;
 }
 
 .custom-button{
-    font-family: inherit;
     background-color: aquamarine;
-    transition: 0.2s opacity;
+    color: black;
     width: 100%;
     height: 50px;
     text-align: center;
     word-wrap: break-word;
 }
 
-button:hover, button:focus{
-    cursor: pointer;
-    opacity: 0.8;
-}
-
-#search{
-    width : 100%;
-    max-width: 250px;
-}
-
-#modal-container{
-    display: none;
-}
-
-#modal-container.is-visible{
-    position: fixed;
-    padding: 20px;
-    box-sizing: border-box;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-
-    z-index: 999;
-    display: grid;
-    text-align: center;
-}
-
-.modal{
-    margin: auto;
-    display: inline-block;
-    box-sizing: border-box;
-    background: #fff;
-    padding: 15px;
-    width: 100%;
-    max-width: 250px;
-    text-align: left;
-
-    aspect-ratio: 2/1.5;
-}
-
-.modal-close{
-    float: right;
-}
-
 .modal-prev, .modal-next{
     font-size: 20px;
 }
 
-.modal-close, .modal-prev, .modal-next{
+.modal-prev, .modal-next{
     border: 0;
     background: none;
     color: #777;
     font-weight: bold;
 }
 
-
-
-
-.modal h1{
-    margin-top: 0;
-    font-size: 20px;
-}
-
-.modal p{
-    margin-bottom: 0;
-}
 
 .modal-image-container{
     display: flex;
@@ -125,6 +49,24 @@ button:hover, button:focus{
 }
 
 .modal-picture{
-    max-width: 250px;
+    width:25%;
     aspect-ratio: 1 / 1;
 }
+
+.logo{
+    width: 100%;
+    max-width: 250px;
+}
+
+@media all and (max-width: 500px){
+    .navbar{
+        display: flex;
+        justify-content: center;
+    }
+}
+
+header{
+    background: aqua;
+}
+
+
