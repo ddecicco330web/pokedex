@@ -117,8 +117,8 @@ let modalRepo = (function(){
     function showModal(pokemon){
 
         // Get Modal Elements
-        let modal = $('.modal-dialog');
-        let modalTitle = $('#infoModal.modal-title');
+        let modal = $('#infoModal .modal-dialog');
+        let modalTitle = $('#infoModal .modal-title');
         let modalBody = $('.modal-body');
 
         modalTitle.empty();
@@ -161,6 +161,7 @@ let modalRepo = (function(){
         // image
         let imageElement = buildElement('<img>', null, 'modal-picture');
         imageElement.attr('src', pokemon.imageURL);
+        imageElement.attr('alt', pokemon.name);
         imageContainer.append(imageElement);
 
         // nextButton
