@@ -26,14 +26,26 @@
     </header>
 
     <div class = "page-content">
-      <ul class="pokemonList list-group"></ul>
+      
+      <!--Loading Modal-->
+      <div class ="modal" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <h1 class="modal-title w-100">Loading...</h1>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <!-- Modal -->
+      <ul class="pokemonList list-group"></ul>
+      
+      <!-- Pokemon Modal -->
       <div class ="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="pokemonModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title" id="exampleModalCenterTitle">Modal title</h1>
+              <h1 class="modal-title">Modal title</h1>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
