@@ -118,7 +118,7 @@ let modalRepo = (function(){
 
         // Get Modal Elements
         let modal = $('.modal-dialog');
-        let modalTitle = $('.modal-title');
+        let modalTitle = $('#infoModal.modal-title');
         let modalBody = $('.modal-body');
 
         modalTitle.empty();
