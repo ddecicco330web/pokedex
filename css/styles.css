@@ -1,3 +1,10 @@
+/*Variables to add later
+Colors:
+aqua
+aquamarine
+black
+#777*/
+
 body{
     margin: auto;
     background-color:aqua;
@@ -5,12 +12,14 @@ body{
     font-weight: 500;
 }
 
+header{
+    background: aqua;
+}
 
-ul{
-    list-style-type: none;
-    padding-left: 0%;
-    width : 100%;
-    max-width: 500px;
+
+.logo{
+    width: 100%;
+    max-width: 250px;
 }
 
 
@@ -19,6 +28,13 @@ ul{
     flex-direction: column;
     align-items: center;
     margin-top: 200px;
+}
+
+ul{
+    list-style-type: none;
+    padding-left: 0%;
+    width : 100%;
+    max-width: 500px;
 }
 
 .custom-button{
@@ -30,6 +46,7 @@ ul{
     word-wrap: break-word;
 }
 
+/*////////////// Modal ////////////////*/
 .modal-prev, .modal-next{
     font-size: 20px;
 }
@@ -40,7 +57,6 @@ ul{
     color: #777;
     font-weight: bold;
 }
-
 
 .modal-image-container{
     display: flex;
@@ -53,9 +69,8 @@ ul{
     aspect-ratio: 1 / 1;
 }
 
-.logo{
-    width: 100%;
-    max-width: 250px;
+.modal-body p{
+    white-space: pre-line;
 }
 
 @media all and (max-width: 500px){
@@ -64,9 +79,3 @@ ul{
         justify-content: center;
     }
 }
-
-header{
-    background: aqua;
-}
-
-
