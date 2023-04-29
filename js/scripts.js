@@ -19,9 +19,10 @@ function hideLoadingMessage(){
     let dummyElement = document.createElement('p');
     dummyElement.innerHTML = createElementText;
     let childNodes = dummyElement.childNodes;
-    console.log(childNodes[0].nodeType);
     if(childNodes[0].nodeType !== 1){
-        console.log('buildElement: Enter valid HTML for createElementText');
+        /* eslint-disable no-console */
+        console.error('buildElement: Enter valid HTML for createElementText');
+        /* eslint-enable no-console */
         return;
     }
 
@@ -56,13 +57,9 @@ function hideLoadingMessage(){
 let modalRepo = (function(){
 
     /////////// Variables /////////////
-    let modalContainer = document.querySelector('#infoModal');
     let prevX = null;
     let prevY = null;
 
-    function hideModal(){
-        modalContainer.classList.remove('is-visible');
-    }
 
     ////////// Initiate swipe ////////////
     function handleStart(e){
@@ -208,20 +205,18 @@ let pokemonRepository = (function (){
                 return;
             }
         }
-
-        console.log('Failed to add pokoemon ' + pokemon + ' to the list.');
-    };
+    }
 
     ////////// Return pokemonList //////////
-    function getAll() {return pokemonList;};
+    function getAll() {return pokemonList;}
 
     ///// Return current pokemon that is showing info //////
-    function getCurrent(){return currentPokemon;};
+    function getCurrent(){return currentPokemon;}
 
     ///// Return pokemon names that inlude string parameter /////
     function getFiltered(name) {
         return pokemonList.filter(pokemon => pokemon.name.includes(name.toUpperCase()))
-    };
+    }
 
     //////// Add list element to HTML page ///////////
     function addListItem(pokemon){
@@ -252,7 +247,7 @@ let pokemonRepository = (function (){
 
     ///// Clear current list and print the filtered list to the HTML page /////
     function printFiltered(name) {
-        if(name===""){
+        if(name===''){
             clearList();
             getAll().forEach(function(item){
                 addListItem(item);
@@ -281,7 +276,9 @@ let pokemonRepository = (function (){
             });
             hideLoadingMessage();
         }).catch(function (e){
+            /* eslint-disable no-console */
             console.error(e);
+            /* eslint-enable no-console */
            hideLoadingMessage();
         });
     }
@@ -298,14 +295,16 @@ let pokemonRepository = (function (){
             item.types = details.types;
             hideLoadingMessage();
         }).catch(function(e){
+            /* eslint-disable no-console */
             console.error(e);
+            /* eslint-enable no-console */
             hideLoadingMessage();
         });
     }
 
     //////////// Print pokemon details in console ////////////
     function showDetails(pokemon){
-        loadDetails(pokemon).then(function(response){
+        loadDetails(pokemon).then(function(){
             currentPokemon = pokemon;
             modalRepo.showModal(pokemon);
         })
@@ -328,7 +327,7 @@ let pokemonRepository = (function (){
 
 
 ////////// Load pokemon //////////
-pokemonRepository.loadList().then(function (response){
+pokemonRepository.loadList().then(function (){
     pokemonRepository.getAll().forEach(function (pokemon){
         pokemonRepository.addListItem(pokemon);
     });
@@ -337,9 +336,9 @@ pokemonRepository.loadList().then(function (response){
 
 //////// Filter pokemon list when searchbar value changes //////////
 let searchBar = document.querySelector('#search');
-console.log(searchBar);
 searchBar.addEventListener('input', function(e){
     pokemonRepository.printFiltered(e.target.value);
 });
+
 
 
