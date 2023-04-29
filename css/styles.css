@@ -30,11 +30,16 @@ header{
     margin-top: 200px;
 }
 
-ul{
+.pokemonList{
     list-style-type: none;
-    padding-left: 0%;
+    padding: 15px;
     width : 100%;
-    max-width: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.pokemonList li{
+    background-color: aqua;
 }
 
 .custom-button{
