@@ -83,4 +83,9 @@ header{
         display: flex;
         justify-content: center;
     }
+
+    .pokemonList{
+        display: grid;
+        grid-template-columns: 1fr;
+    }
 }
