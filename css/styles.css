@@ -58,6 +58,11 @@ header{
     transition: 0.5s;
 }
 
+.custom-button span{
+    background-color: black;
+    opacity: .5;
+}
+
 .custom-button:hover{
     background-position: right center;
     color: white;

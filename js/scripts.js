@@ -1,16 +1,10 @@
 /////// Create loading message //////////
 function showLoadingMessage(){
-    /*let loadingMsg = $('#loading-msg');
-    loadingMsg.addClass('is-visible');*/
-    console.log('show');
     $('#loadingModal').modal({backdrop: 'static', keyboard: false});
 }
 
 //////// Remove loading message //////////
 function hideLoadingMessage(){
-    //let loadingMsg = $('#loading-msg');
-    //loadingMsg.removeClass('is-visible');
-    console.log('hide');
     $('#loadingModal').modal('hide');
 }
 
@@ -357,6 +351,9 @@ let pokemonRepository = (function (){
 
 ////////// Load pokemon //////////
 pokemonRepository.loadList().then(function (){
+    console.log('add');
+    let pokemonList = $('.pokemonList');
+    pokemonList.empty();
     pokemonRepository.getAll().forEach(function (pokemon){
         pokemonRepository.addListItem(pokemon);
     });
