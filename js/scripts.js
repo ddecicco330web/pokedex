@@ -8,27 +8,29 @@ function hideLoadingMessage(){
     $('#loadingModal').modal('hide');
 }
 
- /////////// Create element and assign values //////////////
- function buildElement(createElementText, innerText, elementClasses = null, event = null, eventFunction = null){
-    
+/////////// Create element and assign values //////////////
+function buildElement(createElementText, innerText, elementClasses = null, event = null, eventFunction = null){
     /////// Check if createElementText is valid HTML
-    let dummyElement = document.createElement('p');
-    dummyElement.innerHTML = createElementText;
-    let childNodes = dummyElement.childNodes;
-    if(childNodes[0].nodeType !== 1){
+    if(typeof(createElementText) !== 'string'){
         /* eslint-disable no-console */
-        console.error('buildElement: Enter valid HTML for createElementText');
+        console.log('buildElement: Enter valid HTML for createElementText');
         /* eslint-enable no-console */
         return;
     }
-
+    
     // Build element
     let element = $(createElementText);
-
+    if(element.length === 0){
+        /* eslint-disable no-console */
+        console.log('buildElement: Enter valid HTML for createElementText');
+        /* eslint-enable no-console */
+        return;
+    }
+    
     if(innerText && typeof(innerText) === 'string'){
         element.append(document.createTextNode(innerText));
     }
-   
+
     if(elementClasses){
         if(Array.isArray(elementClasses)){
             elementClasses.forEach((item) => {
@@ -49,6 +51,7 @@ function hideLoadingMessage(){
     return element;
 }
 
+
 ////////////////////// Modal ////////////////////////////////
 let modalRepo = (function(){
 
@@ -56,11 +59,15 @@ let modalRepo = (function(){
     let prevX = null;
     let prevY = null;
 
+    function getTouches(e){
+        return e.touches || e.originalEvent.touches;
+    }
 
     ////////// Initiate swipe ////////////
     function handleStart(e){
-        prevX = e.pageX;
-        prevY = e.pageY;
+        let firstTouch = getTouches(e);
+        prevX = firstTouch[0].clientX;
+        prevY = firstTouch[0].clientY;
     }
 
     /////// Reset swipe vars ////////////
@@ -71,13 +78,12 @@ let modalRepo = (function(){
 
     //////// Handle swipe functionality ////////
     function handleMove(e){
-
         if(!prevX || !prevY){
             return;
         }
 
-        let x = e.pageX;
-        let y = e.pageY;
+        let x = e.touches[0].clientX;
+        let y = e.touches[0].clientY;
 
         let xDiff = x - prevX;
         let yDiff = y - prevY;
@@ -170,10 +176,10 @@ let modalRepo = (function(){
 
 
         // Add swipe event listeners
-        modal.on('pointerdown', handleStart);
-        modal.on('pointerup', handleEnd);
-        modal.on('pointercancel', handleEnd);
-        modal.on('pointermove', (e) => handleMove(e));
+        modal.on('touchstart', handleStart);
+        modal.on('touchend', handleEnd);
+        modal.on('touchcancel', handleEnd);
+        modal.on('touchmove', (e) => handleMove(e));
 
 
 
@@ -293,6 +299,7 @@ let pokemonRepository = (function (){
         });
     }
 
+    /////// Add pokemon images to buttons ///////////
     function loadPokemonImages(){
         for(let i = 0; i < pokemonList.length; i++){
             let image = $('#' + pokemonList[i].name + ' img');
@@ -350,8 +357,7 @@ let pokemonRepository = (function (){
 
 
 ////////// Load pokemon //////////
-pokemonRepository.loadList().then(function (){
-    console.log('add');
+pokemonRepository.loadList().then(function (){   
     let pokemonList = $('.pokemonList');
     pokemonList.empty();
     pokemonRepository.getAll().forEach(function (pokemon){
