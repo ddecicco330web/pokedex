@@ -2,6 +2,7 @@
 function showLoadingMessage(){
     /*let loadingMsg = $('#loading-msg');
     loadingMsg.addClass('is-visible');*/
+    console.log('show');
     $('#loadingModal').modal({backdrop: 'static', keyboard: false});
 }
 
@@ -9,6 +10,7 @@ function showLoadingMessage(){
 function hideLoadingMessage(){
     //let loadingMsg = $('#loading-msg');
     //loadingMsg.removeClass('is-visible');
+    console.log('hide');
     $('#loadingModal').modal('hide');
 }
 
@@ -231,12 +233,18 @@ let pokemonRepository = (function (){
         });
         button.attr('data-toggle', 'modal');
         button.attr('data-target', '#infoModal');
+        button.attr('id', pokemon.name);
+        let imagePlaceholder = $('<img>');
+        imagePlaceholder.attr('height', '100');
+        imagePlaceholder.attr('width', '100');
+        button.append(imagePlaceholder);
         node.append(button);
 
         // Add item to list
         let pokemonListElement = $('.pokemonList');
         pokemonListElement.append(node);
     }
+
 
     ///////// Remove all list items ////////////
     function clearList()
@@ -259,6 +267,8 @@ let pokemonRepository = (function (){
                 addListItem(item);
             })
         }
+
+        loadPokemonImages();
     }
 
     ///////// Load pokemon list from JSON////////////
@@ -267,14 +277,20 @@ let pokemonRepository = (function (){
         return fetch(apiUrl).then(function (response){
             return response.json();
         }).then(function (json){
-            json.results.forEach(function (item){
+            let promises = json.results.map(function (item){
                 let pokemon = {
                     name : item.name.toUpperCase(),
                     detailsURL : item.url
                 };
                 add(pokemon);
+                return loadDetails(pokemon);
             });
             hideLoadingMessage();
+            Promise.allSettled(promises).then( () => {
+                loadPokemonImages();
+            });
+            
+            
         }).catch(function (e){
             /* eslint-disable no-console */
             console.error(e);
@@ -283,9 +299,21 @@ let pokemonRepository = (function (){
         });
     }
 
+    function loadPokemonImages(){
+        for(let i = 0; i < pokemonList.length; i++){
+            let image = $('#' + pokemonList[i].name + ' img');
+            image.attr('src', pokemonList[i].imageURL);
+            if(i < 10){
+                image.attr('loading', 'lazy');
+            }
+            image.attr('height', '100');
+            image.attr('width', '100');
+            image.attr('alt', pokemonList[i].name + ' image');
+        }
+    }
+
     ////////// Load pokemon stats/info into pokemon object //////////////
     function loadDetails(item){
-        showLoadingMessage();
         let url = item.detailsURL;
         return fetch(url).then(function(response){
             return response.json();
@@ -293,21 +321,22 @@ let pokemonRepository = (function (){
             item.imageURL = details.sprites.front_default;
             item.height = details.height;
             item.types = details.types;
-            hideLoadingMessage();
         }).catch(function(e){
             /* eslint-disable no-console */
             console.error(e);
             /* eslint-enable no-console */
-            hideLoadingMessage();
         });
     }
 
     //////////// Print pokemon details in console ////////////
     function showDetails(pokemon){
+        showLoadingMessage();
         loadDetails(pokemon).then(function(){
             currentPokemon = pokemon;
             modalRepo.showModal(pokemon);
+            hideLoadingMessage();
         })
+        
     }
 
     ////////// Return /////////////
