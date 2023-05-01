@@ -17,15 +17,19 @@ function buildElement(createElementText, innerText, elementClasses = null, event
         /* eslint-enable no-console */
         return;
     }
-    
-    // Build element
-    let element = $(createElementText);
-    if(element.length === 0){
+
+    let dummyElement = document.createElement('p');
+    dummyElement.innerHTML = createElementText;
+    let childNodes = dummyElement.childNodes;
+    if(childNodes[0].nodeType !== 1){
         /* eslint-disable no-console */
         console.log('buildElement: Enter valid HTML for createElementText');
         /* eslint-enable no-console */
         return;
     }
+    
+    // Build element
+    let element = $(createElementText);
     
     if(innerText && typeof(innerText) === 'string'){
         element.append(document.createTextNode(innerText));
