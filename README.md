@@ -4,4 +4,5 @@ This app uses pokeAPI.
 
 Technologies used:
 HTML, CSS, Javascript, Bootstrap, jQuery
+
 # pokedex
