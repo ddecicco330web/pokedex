@@ -1435,7 +1435,6 @@ node_modules/yocto-queue/readme.md
 package-lock.json
 package.json
 .vscode/extensions.json
-.eslintignore
 .prettierignore
 .prettierrc
 .prettierrc.json
