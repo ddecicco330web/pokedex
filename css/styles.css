@@ -5,15 +5,26 @@ aquamarine
 black
 #777*/
 
+:root{
+    --background-color : aqua;
+    --secondary-color : #777;
+    --primary-color : #000;
+    --gradient-start : aquamarine;
+    --gradient-end : rgb(19, 196, 245);
+    --button-hover-color: #FFF;
+    --stat-background-color: lightblue;
+    --stat-text-color : darkgreen;
+}
+
 body{
     margin: auto;
-    background-color:aqua;
+    background-color:var(--background-color);
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
 }
 
 header{
-    background: aqua;
+    background: var(--background-color);
 }
 
 
@@ -43,13 +54,13 @@ header{
 }
 
 .pokemonList li{
-    background-color: aqua;
+    background-color: var(--background-color);
     text-align: center;
 }
 
 .custom-button{
-    background-image: linear-gradient(to right, aquamarine 0 10%, rgb(19, 196, 245) 50%);
-    color: black;
+    background-image: linear-gradient(to right, var(--gradient-start) 0 10%, var(--gradient-end) 50%);
+    color: var(--primary-color);
     width: 100%;
     height: auto;
     text-align: center;
@@ -59,19 +70,19 @@ header{
 }
 
 .custom-button span{
-    background-color: black;
+    background-color: var(--primary-color);
     opacity: .5;
 }
 
 .custom-button:hover{
     background-position: right center;
-    color: white;
+    color: var(--button-hover-color);
 }
 
 #search{
-    background-color: black;
+    background-color: var(--primary-color);
     opacity: 0.5;
-    color:#777;
+    color: var(--secondary-color);
 }
 
 /*////////////// Modal ////////////////*/
@@ -82,7 +93,7 @@ header{
 .modal-prev, .modal-next{
     border: 0;
     background: none;
-    color: #777;
+    color: var(--secondary-color);
     font-weight: bold;
 }
 
@@ -93,12 +104,31 @@ header{
 }
 
 .modal-picture{
-    width:25%;
+    width:40%;
     aspect-ratio: 1 / 1;
 }
 
 .modal-body p{
     white-space: pre-line;
+}
+
+.pokemon-stats{
+    background-color: var(--stat-background-color);
+    opacity: .7;
+    padding: 10px;
+    display : grid;
+    grid-template-columns: 1fr 1fr;
+    list-style: none;
+    border-radius: 10px;
+    border-style: solid;
+}
+
+.pokemon-stats li{
+    color: var(--stat-text-color);
+    text-align: center;
+}
+.pokemon-stats p{
+    color: var(--primary-color);
 }
 
 @media all and (max-width: 500px){
