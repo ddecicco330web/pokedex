@@ -1,7 +1,4 @@
-/////// Create loading message //////////
-function showLoadingMessage() {
-  $('#loadingModal').modal({ backdrop: 'static', keyboard: false });
-}
+
 
 //////// Remove loading message //////////
 function hideLoadingMessage() {
@@ -457,3 +454,4 @@ let searchBar = document.querySelector('#search');
 searchBar.addEventListener('input', function (e) {
   pokemonRepository.printFiltered(e.target.value);
 });
+
