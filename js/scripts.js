@@ -23,7 +23,7 @@ function buildElement(createElementText, innerText, elementClasses = null, event
     let childNodes = dummyElement.childNodes;
     if(childNodes[0].nodeType !== 1){
         /* eslint-disable no-console */
-        console.log('buildElement: Enter valid HTML for createElementText');
+        console.error('buildElement: Enter valid HTML for createElementText');
         /* eslint-enable no-console */
         return;
     }
@@ -129,23 +129,50 @@ let modalRepo = (function(){
 
         // Make Header
         // title
-        let titleElement = buildElement('<h2></h2>', pokemon.name);
+        let titleElement = buildElement('<h2></h2>', '#' + pokemon.id + ' ' + pokemon.name);
         modalTitle.append(titleElement);
         
 
         // Make Body
         // pokemon text
-        let text = 'Height ' + pokemon.height + '\nType:';
-            for(let i = 0; i < pokemon.types.length; i++){
-                text += ' ' + pokemon.types[i].type.name;
+        modalBody.append(buildElement('<p></p>', pokemon.flavorText));
 
-                if(i !== (pokemon.types.length - 1)){
-                    text += ',';
-                }
+        let statsElement = buildElement('<ul></ul>', null, 'pokemon-stats');
+
+        let heightElement = buildElement('<li></li>', 'Height: ');
+        statsElement.append(heightElement);
+        heightElement.append(buildElement('<p></p>', pokemon.height.toString()));
+
+        let text = 'Type:';
+        let typeElement = buildElement('<li></li>', text);
+        statsElement.append(typeElement);
+
+        text = '';
+        for(let i = 0; i < pokemon.types.length; i++){
+            text += pokemon.types[i].type.name;
+
+            if(i !== (pokemon.types.length - 1)){
+                text += ', ';
             }
-            
-        let contentElement = buildElement('<p></p>', text);
-        modalBody.append(contentElement);
+        }
+
+        typeElement.append(buildElement('<p></p>', text));
+
+        text = 'Abilities: ';
+        let abilitiesElement = buildElement('<li></li>', text);
+        statsElement.append(abilitiesElement);
+
+        text = '';
+        for(let i = 0; i < pokemon.abilities.length; i++){
+            text += pokemon.abilities[i].ability.name;
+
+            if(i !== (pokemon.types.length - 1)){
+                text += ', ';
+            }
+        }
+        abilitiesElement.append(buildElement('<p></p>', text));
+
+        modalBody.append(statsElement);
 
         // image container (prevButton, image, nextButton)
         let imageContainer = buildElement('<div></div>', null, 'modal-image-container');
@@ -272,7 +299,7 @@ let pokemonRepository = (function (){
             })
         }
 
-        loadPokemonImages();
+        showPokemonImages();
     }
 
     ///////// Load pokemon list from JSON////////////
@@ -287,11 +314,11 @@ let pokemonRepository = (function (){
                     detailsURL : item.url
                 };
                 add(pokemon);
-                return loadDetails(pokemon);
+                return loadPokemonImage(pokemon);
             });
             hideLoadingMessage();
             Promise.allSettled(promises).then( () => {
-                loadPokemonImages();
+                showPokemonImages();
             });
             
             
@@ -304,7 +331,7 @@ let pokemonRepository = (function (){
     }
 
     /////// Add pokemon images to buttons ///////////
-    function loadPokemonImages(){
+    function showPokemonImages(){
         for(let i = 0; i < pokemonList.length; i++){
             let image = $('#' + pokemonList[i].name + ' img');
             image.attr('src', pokemonList[i].imageURL);
@@ -317,15 +344,12 @@ let pokemonRepository = (function (){
         }
     }
 
-    ////////// Load pokemon stats/info into pokemon object //////////////
-    function loadDetails(item){
+    function loadPokemonImage(item){
         let url = item.detailsURL;
         return fetch(url).then(function(response){
             return response.json();
         }).then(function(details){
             item.imageURL = details.sprites.front_default;
-            item.height = details.height;
-            item.types = details.types;
         }).catch(function(e){
             /* eslint-disable no-console */
             console.error(e);
@@ -333,13 +357,49 @@ let pokemonRepository = (function (){
         });
     }
 
+    ////////// Load pokemon stats/info into pokemon object //////////////
+    function loadDetails(item){
+        showLoadingMessage();
+        let url = item.detailsURL;
+        return fetch(url).then(function(response){
+            return response.json();
+        }).then(function(details){
+            item.imageURL = details.sprites.front_default;
+            item.height = details.height;
+            item.types = details.types;
+            item.id = details.id;
+            item.abilities = details.abilities;
+            item.infoURL = details.species.url;
+        }).catch(function(e){
+            /* eslint-disable no-console */
+            console.error(e);
+            /* eslint-enable no-console */
+            hideLoadingMessage();
+        });
+    }
+
+    function loadSpeciesInfo(item){
+        let url = item.infoURL;
+        return fetch(url).then(function(response){
+            return response.json();
+        }).then(function(details){
+            item.flavorText = details.flavor_text_entries[0].flavor_text;
+            item.flavorText = item.flavorText.replaceAll('\n', ' ');
+            hideLoadingMessage();
+        }).catch(function(e){
+            /* eslint-disable no-console */
+            console.error(e);
+            /* eslint-enable no-console */
+            hideLoadingMessage();
+        });
+    }
     //////////// Print pokemon details in console ////////////
     function showDetails(pokemon){
-        showLoadingMessage();
         loadDetails(pokemon).then(function(){
             currentPokemon = pokemon;
-            modalRepo.showModal(pokemon);
-            hideLoadingMessage();
+            loadSpeciesInfo(pokemon).then(function(){
+                modalRepo.showModal(pokemon);
+            })
         })
         
     }
