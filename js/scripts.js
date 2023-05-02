@@ -338,18 +338,14 @@ let pokemonRepository = (function () {
         return response.json();
       })
       .then(function (json) {
-        let promises = json.results.map(function (item) {
+        json.results.forEach(function (item) {
           let pokemon = {
             name: item.name.toUpperCase(),
             detailsURL: item.url,
           };
           add(pokemon);
-          return loadPokemonImage(pokemon);
         });
         hideLoadingMessage();
-        Promise.allSettled(promises).then(() => {
-          showPokemonImages();
-        });
       })
       .catch(function (e) {
         /* eslint-disable no-console */
@@ -373,25 +369,8 @@ let pokemonRepository = (function () {
     }
   }
 
-  function loadPokemonImage(item) {
-    let url = item.detailsURL;
-    return fetch(url)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (details) {
-        item.imageURL = details.sprites.front_default;
-      })
-      .catch(function (e) {
-        /* eslint-disable no-console */
-        console.error(e);
-        /* eslint-enable no-console */
-      });
-  }
-
   ////////// Load pokemon stats/info into pokemon object //////////////
   function loadDetails(item) {
-    showLoadingMessage();
     let url = item.detailsURL;
     return fetch(url)
       .then(function (response) {
@@ -433,6 +412,7 @@ let pokemonRepository = (function () {
   }
   //////////// Print pokemon details in console ////////////
   function showDetails(pokemon) {
+    showLoadingMessage();
     loadDetails(pokemon).then(function () {
       currentPokemon = pokemon;
       loadSpeciesInfo(pokemon).then(function () {
@@ -452,6 +432,7 @@ let pokemonRepository = (function () {
     loadDetails: loadDetails,
     showDetails: showDetails,
     getCurrent: getCurrent,
+    showPokemonImages: showPokemonImages,
   };
 })();
 
@@ -459,8 +440,15 @@ let pokemonRepository = (function () {
 pokemonRepository.loadList().then(function () {
   let pokemonList = $('.pokemonList');
   pokemonList.empty();
+  let promises = [];
   pokemonRepository.getAll().forEach(function (pokemon) {
     pokemonRepository.addListItem(pokemon);
+  });
+  pokemonRepository.getAll().forEach(function (pokemon) {
+    promises.push(pokemonRepository.loadDetails(pokemon));
+  });
+  Promise.allSettled(promises).then(function () {
+    pokemonRepository.showPokemonImages();
   });
 });
 
