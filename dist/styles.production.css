@@ -1,3 +1,10 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
 /*Variables
 Colors:
 aqua
@@ -10,26 +17,15 @@ lightblue
 darkgreen
 */
 
-:root {
-  --background-color: aqua;
-  --secondary-color: #777;
-  --primary-color: #000;
-  --gradient-start: aquamarine;
-  --gradient-end: rgb(19, 196, 245);
-  --button-hover-color: #fff;
-  --stat-background-color: lightblue;
-  --stat-text-color: darkgreen;
-}
-
 body {
   margin: auto;
-  background-color: var(--background-color);
+  background-color: aqua;
   font-family: "Roboto", sans-serif;
   font-weight: 500;
 }
 
 header {
-  background: var(--background-color);
+  background: aqua;
 }
 
 .logo {
@@ -42,8 +38,15 @@ header {
 }
 
 .page-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   margin-top: 200px;
 }
@@ -52,44 +55,60 @@ header {
   list-style-type: none;
   padding: 15px;
   width: 100%;
+  display: -ms-grid;
   display: grid;
+  -ms-grid-columns: 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
 .pokemonList li {
-  background-color: var(--background-color);
+  background-color: aqua;
   text-align: center;
 }
 
 .custom-button {
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0, aquamarine),
+    color-stop(50%, rgb(19, 196, 245))
+  );
+  background-image: -o-linear-gradient(
+    left,
+    aquamarine 0 10%,
+    rgb(19, 196, 245) 50%
+  );
   background-image: linear-gradient(
     to right,
-    var(--gradient-start) 0 10%,
-    var(--gradient-end) 50%
+    aquamarine 0 10%,
+    rgb(19, 196, 245) 50%
   );
-  color: var(--primary-color);
+  color: #000;
   width: 100%;
   height: auto;
   text-align: center;
   word-wrap: break-word;
   background-size: 200% auto;
+  -webkit-transition: 0.5s;
+  -o-transition: 0.5s;
   transition: 0.5s;
 }
 
 .custom-button span {
-  background-color: var(--primary-color);
+  background-color: #000;
   opacity: 0.5;
 }
 
 .custom-button:hover {
   background-position: right center;
-  color: var(--button-hover-color);
+  color: #fff;
 }
 
 #search {
-  background-color: var(--primary-color);
+  background-color: #000;
   opacity: 0.5;
-  color: var(--secondary-color);
+  color: #777;
 }
 
 /*////////////// Modal ////////////////*/
@@ -98,17 +117,27 @@ header {
   font-size: 20px;
 }
 
-.modal-prev,
+.modal-prev {
+  border: 0;
+  background: none;
+  color: #777;
+  font-weight: bold;
+}
+
 .modal-next {
   border: 0;
   background: none;
-  color: var(--secondary-color);
+  color: #777;
   font-weight: bold;
 }
 
 .modal-image-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   width: 100%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
@@ -122,10 +151,12 @@ header {
 }
 
 .pokemon-stats {
-  background-color: var(--stat-background-color);
+  background-color: lightblue;
   opacity: 0.7;
   padding: 10px;
+  display: -ms-grid;
   display: grid;
+  -ms-grid-columns: 1fr 1fr;
   grid-template-columns: 1fr 1fr;
   list-style: none;
   border-radius: 10px;
@@ -133,21 +164,27 @@ header {
 }
 
 .pokemon-stats li {
-  color: var(--stat-text-color);
+  color: darkgreen;
   text-align: center;
 }
 .pokemon-stats p {
-  color: var(--primary-color);
+  color: #000;
 }
 
 @media all and (max-width: 500px) {
   .navbar {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
   }
 
   .pokemonList {
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 1fr;
     grid-template-columns: 1fr;
   }
 }
