@@ -1,0 +1,153 @@
+/*Variables
+Colors:
+aqua
+aquamarine
+black
+#777
+white
+rgb(19, 196, 245)
+lightblue
+darkgreen
+*/
+
+:root {
+  --background-color: aqua;
+  --secondary-color: #777;
+  --primary-color: #000;
+  --gradient-start: aquamarine;
+  --gradient-end: rgb(19, 196, 245);
+  --button-hover-color: #fff;
+  --stat-background-color: lightblue;
+  --stat-text-color: darkgreen;
+}
+
+body {
+  margin: auto;
+  background-color: var(--background-color);
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+}
+
+header {
+  background: var(--background-color);
+}
+
+.logo {
+  width: 100%;
+  max-width: 250px;
+}
+
+#search {
+  border-radius: 10px;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 200px;
+}
+
+.pokemonList {
+  list-style-type: none;
+  padding: 15px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.pokemonList li {
+  background-color: var(--background-color);
+  text-align: center;
+}
+
+.custom-button {
+  background-image: linear-gradient(
+    to right,
+    var(--gradient-start) 0 10%,
+    var(--gradient-end) 50%
+  );
+  color: var(--primary-color);
+  width: 100%;
+  height: auto;
+  text-align: center;
+  word-wrap: break-word;
+  background-size: 200% auto;
+  transition: 0.5s;
+}
+
+.custom-button span {
+  background-color: var(--primary-color);
+  opacity: 0.5;
+}
+
+.custom-button:hover {
+  background-position: right center;
+  color: var(--button-hover-color);
+}
+
+#search {
+  background-color: var(--primary-color);
+  opacity: 0.5;
+  color: var(--secondary-color);
+}
+
+/*////////////// Modal ////////////////*/
+.modal-prev,
+.modal-next {
+  font-size: 20px;
+}
+
+.modal-prev,
+.modal-next {
+  border: 0;
+  background: none;
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
+.modal-image-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.modal-picture {
+  width: 40%;
+  aspect-ratio: 1 / 1;
+}
+
+.modal-body p {
+  white-space: pre-line;
+}
+
+.pokemon-stats {
+  background-color: var(--stat-background-color);
+  opacity: 0.7;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  list-style: none;
+  border-radius: 10px;
+  border-style: solid;
+}
+
+.pokemon-stats li {
+  color: var(--stat-text-color);
+  text-align: center;
+}
+.pokemon-stats p {
+  color: var(--primary-color);
+}
+
+@media all and (max-width: 500px) {
+  .navbar {
+    display: flex;
+    justify-content: center;
+  }
+
+  .pokemonList {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
